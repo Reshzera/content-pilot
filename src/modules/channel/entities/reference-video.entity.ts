@@ -22,7 +22,9 @@ export class ReferenceVideo {
     this.channelId = props.channelId;
   }
 
-  static PrismaToEntity(prismaRef: PrismaReference | null): ReferenceVideo | null {
+  static PrismaToEntity(
+    prismaRef: PrismaReference | null,
+  ): ReferenceVideo | null {
     if (!prismaRef) {
       return null;
     }

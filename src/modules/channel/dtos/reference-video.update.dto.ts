@@ -13,4 +13,3 @@ export class UpdateReferenceVideoDto {
   @IsBoolean()
   delete?: boolean;
 }
-

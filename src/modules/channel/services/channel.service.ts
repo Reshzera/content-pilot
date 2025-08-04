@@ -23,15 +23,14 @@ export class ChannelService {
     const created = (await this.repository.create(channel))!;
 
     if (data.references?.length) {
-      const refs: ReferenceVideo[] = [];
-      for (const refData of data.references) {
+      const promisesRefs = data.references.map((refData) => {
         const ref = new ReferenceVideo({
           channelId: created.id,
           referenceUrl: refData.referenceUrl,
         });
-        const createdRef = (await this.repository.createReference(ref))!;
-        refs.push(createdRef);
-      }
+        return this.repository.createReference(ref) as Promise<ReferenceVideo>;
+      });
+      const refs = await Promise.all(promisesRefs);
       created.references = refs;
     }
 
@@ -40,7 +39,7 @@ export class ChannelService {
 
   async findAll(ownerId: string) {
     const channels = await this.repository.findUserChannels(ownerId);
-    return channels.map((c) => Channel.EntityToApi(c));
+    return channels.map((channel) => Channel.EntityToApi(channel as Channel));
   }
 
   async update(ownerId: string, id: string, data: UpdateChannelDto) {

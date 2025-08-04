@@ -35,14 +35,16 @@ export class Channel {
   }
 
   static PrismaToEntity(
-    prismaChannel: (PrismaChannel & { referencesVideos?: PrismaReference[] }) | null,
+    prismaChannel:
+      | (PrismaChannel & { referencesVideos?: PrismaReference[] })
+      | null,
   ): Channel | null {
     if (!prismaChannel) {
       return null;
     }
 
-    const references = (prismaChannel.referencesVideos || []).map((ref) =>
-      ReferenceVideo.PrismaToEntity(ref)!,
+    const references = (prismaChannel.referencesVideos || []).map(
+      (ref) => ReferenceVideo.PrismaToEntity(ref)!,
     );
 
     return new Channel({

@@ -61,7 +61,9 @@ export class ChannelRepository {
   }
 
   async findReferenceById(id: string) {
-    const ref = await this.prisma.referencesVideos.findUnique({ where: { id } });
+    const ref = await this.prisma.referencesVideos.findUnique({
+      where: { id },
+    });
     return ReferenceVideo.PrismaToEntity(ref);
   }
 
@@ -76,7 +78,9 @@ export class ChannelRepository {
   }
 
   async deleteReference(id: string) {
-    const deleted = await this.prisma.referencesVideos.delete({ where: { id } });
+    const deleted = await this.prisma.referencesVideos.delete({
+      where: { id },
+    });
     return ReferenceVideo.PrismaToEntity(deleted);
   }
 }

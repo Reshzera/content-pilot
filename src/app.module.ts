@@ -7,7 +7,13 @@ import { UserModule } from './modules/user/user.module';
 import { ChannelModule } from './modules/channel/channel.module';
 import { VideoModule } from './modules/video/video.module';
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, UserModule, ChannelModule, VideoModule],
+  imports: [
+    ConfigModule.forRoot(),
+    AuthModule,
+    UserModule,
+    ChannelModule,
+    VideoModule,
+  ],
   controllers: [],
   providers: [
     {

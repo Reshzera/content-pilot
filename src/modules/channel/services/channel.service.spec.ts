@@ -54,7 +54,9 @@ describe('ChannelService', () => {
       });
 
       expect(repository.createReference).toHaveBeenCalled();
-      expect(result!.references).toEqual([ReferenceVideo.EntityToApi(reference)]);
+      expect(result!.references).toEqual([
+        ReferenceVideo.EntityToApi(reference),
+      ]);
     });
   });
 
@@ -91,7 +93,12 @@ describe('ChannelService', () => {
     });
 
     it('should create new reference on update', async () => {
-      const channel = new Channel({ id: '1', name: 'c', ownerId: 'u', references: [] });
+      const channel = new Channel({
+        id: '1',
+        name: 'c',
+        ownerId: 'u',
+        references: [],
+      });
       repository.findById.mockResolvedValue(channel);
       repository.update.mockResolvedValue(channel);
       const reference = new ReferenceVideo({
@@ -106,12 +113,23 @@ describe('ChannelService', () => {
       });
 
       expect(repository.createReference).toHaveBeenCalled();
-      expect(result!.references).toEqual([ReferenceVideo.EntityToApi(reference)]);
+      expect(result!.references).toEqual([
+        ReferenceVideo.EntityToApi(reference),
+      ]);
     });
 
     it('should update existing reference', async () => {
-      const ref = new ReferenceVideo({ id: 'r1', channelId: '1', referenceUrl: 'old' });
-      const channel = new Channel({ id: '1', name: 'c', ownerId: 'u', references: [ref] });
+      const ref = new ReferenceVideo({
+        id: 'r1',
+        channelId: '1',
+        referenceUrl: 'old',
+      });
+      const channel = new Channel({
+        id: '1',
+        name: 'c',
+        ownerId: 'u',
+        references: [ref],
+      });
       repository.findById.mockResolvedValue(channel);
       repository.update.mockResolvedValue(channel);
       repository.findReferenceById.mockResolvedValue(ref);
@@ -125,8 +143,17 @@ describe('ChannelService', () => {
     });
 
     it('should delete reference', async () => {
-      const ref = new ReferenceVideo({ id: 'r1', channelId: '1', referenceUrl: 'old' });
-      const channel = new Channel({ id: '1', name: 'c', ownerId: 'u', references: [ref] });
+      const ref = new ReferenceVideo({
+        id: 'r1',
+        channelId: '1',
+        referenceUrl: 'old',
+      });
+      const channel = new Channel({
+        id: '1',
+        name: 'c',
+        ownerId: 'u',
+        references: [ref],
+      });
       repository.findById.mockResolvedValue(channel);
       repository.update.mockResolvedValue(channel);
       repository.findReferenceById.mockResolvedValue(ref);
@@ -165,5 +192,4 @@ describe('ChannelService', () => {
       expect(result).toEqual(Channel.EntityToApi(channel));
     });
   });
-
 });
