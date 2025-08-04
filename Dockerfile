@@ -1,15 +1,18 @@
-FROM postgres:latest
+# Build stage
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+COPY . .
+RUN npx prisma generate
+RUN yarn build
 
-
-ENV POSTGRES_DB=music-pay
-ENV POSTGRES_USER=admin
-ENV POSTGRES_PASSWORD=admin
-
-
-EXPOSE 5432
-
-
-VOLUME [ "/var/lib/postgresql/data" ]
-
-
-CMD ["postgres"]
+# Production stage
+FROM node:20-alpine
+WORKDIR /app
+COPY package.json yarn.lock ./
+RUN yarn install --production --frozen-lockfile
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
+COPY prisma ./prisma
+CMD ["node", "dist/main.js"]
