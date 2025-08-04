@@ -19,4 +19,53 @@ model User {
   name                   String?
   password               String
   sessionId              String?
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  channels               Channels[]
+}
+
+model Channels {
+  id                     String                  @id @default(uuid())
+  name                   String
+  description            String?
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  ownerId                String
+  owner                  User                    @relation(fields: [ownerId], references: [id])
+  videos                 Videos[]
+  referencesVideos       ReferencesVideos[]
+}
+
+model ReferencesVideos {
+  id                     String                  @id @default(uuid())
+  referenceUrl           String
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  channelId              String
+  channel                Channels                @relation(fields: [channelId], references: [id])
+}
+
+model Videos {
+  id                     String                  @id @default(uuid())
+  title                  String
+  description            String?
+  url                    String
+  thumbnailUrl           String?
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+
+  channelId              String
+  channel                Channels                @relation(fields: [channelId], references: [id])
+  cuts                   Cuts[]
+}
+
+model Cuts {
+  id                     String                  @id @default(uuid())
+  startTime              Int
+  endTime                Int
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+
+  videoId                String
+  video                  Videos                  @relation(fields: [videoId], references: [id])
 }

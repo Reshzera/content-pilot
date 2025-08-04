@@ -16,17 +16,17 @@ export interface UserToApi {
 }
 
 export class User {
-  id?: string;
+  id: string;
   email: string;
   name?: string | null;
   private _password: string;
   sessionId?: string | null;
 
   constructor(props: UserProps) {
-    this.id = props.id;
+    this.id = props.id ?? '';
     this.email = props.email;
     this.name = props.name ?? null;
-    this._password = props.password;
+    this._password = hashSync(props.password, 10);
     this.sessionId = props.sessionId ?? null;
   }
 
@@ -52,7 +52,11 @@ export class User {
     });
   }
 
-  static EntityToApi(user: User): UserToApi {
+  static EntityToApi(user: User | null): UserToApi | null {
+    if (!user) {
+      return null;
+    }
+
     return {
       id: user.id ?? '',
       email: user.email ?? undefined,
