@@ -20,7 +20,8 @@
     "paths": {
       "@infra/*": ["./src/infra/*"],
       "@user/*": ["src/modules/user/*"],
-      "@auth/*": ["./src/modules/auth/*"]
+      "@auth/*": ["./src/modules/auth/*"],
+      "@channel/*": ["src/modules/channel/*"]
     }
   }
 }

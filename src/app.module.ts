@@ -4,8 +4,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { UserModule } from './modules/user/user.module';
+import { ChannelModule } from './modules/channel/channel.module';
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, UserModule],
+  imports: [ConfigModule.forRoot(), AuthModule, UserModule, ChannelModule],
   controllers: [],
   providers: [
     {
