@@ -3,7 +3,6 @@ import { UserRepository } from '../repositories/user.repository';
 import { UserExistsError, UserNotFoundError } from '../../../errors/user.erros';
 import { User } from '../entities/user.entity';
 
-
 describe('UserService', () => {
   let service: UserService;
   let repository: jest.Mocked<UserRepository>;
@@ -92,13 +91,17 @@ describe('UserService', () => {
     it('should throw when user not found', async () => {
       repository.findById.mockResolvedValue(null);
 
-      await expect(
-        service.update('1', { name: 'New' }),
-      ).rejects.toBeInstanceOf(UserNotFoundError);
+      await expect(service.update('1', { name: 'New' })).rejects.toBeInstanceOf(
+        UserNotFoundError,
+      );
     });
 
     it('should throw when new email already exists', async () => {
-      const user = new User({ id: '1', email: 'old@test.com', password: '123' });
+      const user = new User({
+        id: '1',
+        email: 'old@test.com',
+        password: '123',
+      });
       repository.findById.mockResolvedValue(user);
       repository.findByEmail.mockResolvedValueOnce(
         new User({ id: '2', email: 'new@test.com', password: '123' }),
@@ -110,4 +113,3 @@ describe('UserService', () => {
     });
   });
 });
-

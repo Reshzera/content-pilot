@@ -2,10 +2,13 @@ import { AuthService } from './auth.service';
 import { AuthRepository } from '../repositories/auth.repository';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../../user/entities/user.entity';
-import { UserInvalidCredentialsError, UserInvalidSessionError, UserNotFoundError } from '../../../errors/user.erros';
+import {
+  UserInvalidCredentialsError,
+  UserInvalidSessionError,
+  UserNotFoundError,
+} from '../../../errors/user.erros';
 import { UserPayload } from '../models/user.payload';
 import * as crypto from 'crypto';
-
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -29,16 +32,14 @@ describe('AuthService', () => {
   describe('login', () => {
     it('should set session id, store it and return access token', async () => {
       const user = new User({ email: 'test@example.com', password: '123' });
-      jest.spyOn(crypto, 'randomUUID').mockReturnValue(
-        '00000000-0000-0000-0000-000000000000',
-      );
+      jest
+        .spyOn(crypto, 'randomUUID')
+        .mockReturnValue('00000000-0000-0000-0000-000000000000');
       jwtService.sign.mockReturnValue('token');
 
       const result = await authService.login(user);
 
-      expect(user.sessionId).toBe(
-        '00000000-0000-0000-0000-000000000000',
-      );
+      expect(user.sessionId).toBe('00000000-0000-0000-0000-000000000000');
       expect(authRepository.login).toHaveBeenCalledWith(user);
       expect(jwtService.sign).toHaveBeenCalledWith({
         sessionId: '00000000-0000-0000-0000-000000000000',
@@ -92,7 +93,9 @@ describe('AuthService', () => {
       });
       authRepository.findUserById.mockResolvedValue(user);
 
-      await expect(authService.validateSession(payload)).resolves.toBeUndefined();
+      await expect(
+        authService.validateSession(payload),
+      ).resolves.toBeUndefined();
     });
 
     it('should throw UserInvalidSessionError when session id mismatches', async () => {
@@ -115,4 +118,3 @@ describe('AuthService', () => {
     });
   });
 });
-
