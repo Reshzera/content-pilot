@@ -60,6 +60,7 @@ model Videos {
 
 model Cuts {
   id                     String                  @id @default(uuid())
+  url                    String
   startTime              Int
   endTime                Int
   createdAt              DateTime                @default(now())
