@@ -19,23 +19,19 @@ export class User {
   id: string;
   email: string;
   name?: string | null;
-  private _password: string;
+  password: string;
   sessionId?: string | null;
 
   constructor(props: UserProps) {
     this.id = props.id ?? '';
     this.email = props.email;
     this.name = props.name ?? null;
-    this._password = hashSync(props.password, 10);
+    this.password = props.password;
     this.sessionId = props.sessionId ?? null;
   }
 
-  set password(password: string) {
-    this._password = hashSync(password, 10);
-  }
-
-  get password(): string {
-    return this._password;
+  public hashPassword(): void {
+    this.password = hashSync(this.password, 10);
   }
 
   static PrismaToEntity(prismaUser: PrismaUser | null): User | null {

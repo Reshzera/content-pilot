@@ -15,7 +15,7 @@ import { InfraModule } from '../../infra/infra.module';
         options: {
           client: {
             clientId: 'content-pilot',
-            brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
+            brokers: ['localhost:9092'],
           },
           consumer: {
             groupId: 'content-pilot-video',

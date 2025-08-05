@@ -43,6 +43,8 @@ export class AuthService {
       throw new UserNotFoundError();
     }
 
+    console.log('user', user.password);
+
     const passwordMatch = await compare(password, user.password);
 
     if (!passwordMatch) {

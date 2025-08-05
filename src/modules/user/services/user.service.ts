@@ -17,6 +17,7 @@ export class UserService {
     }
 
     const newUser = new User(user);
+    newUser.hashPassword();
 
     const createdUser = await this.userRepository.create(newUser);
 

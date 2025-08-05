@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { VideoService } from '../services/video.service';
 import { CreateVideoCutsDto } from '../dtos/create-video-cuts.dto';
+import { VideoService } from '../services/video.service';
 
 @Controller({ path: 'video' })
 export class VideoController {
@@ -15,7 +15,10 @@ export class VideoController {
   @EventPattern('cuts.completed')
   async handleCutsCompleted(
     @Payload()
-    data: { videoId: string; cuts: { url: string; start: number; end: number }[] },
+    data: {
+      videoId: string;
+      cuts: { url: string; start: number; end: number }[];
+    },
   ) {
     await this.service.addCuts(data.videoId, data.cuts);
   }
