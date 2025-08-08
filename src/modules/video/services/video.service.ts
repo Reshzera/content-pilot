@@ -12,6 +12,10 @@ export class VideoService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    const topics = ['content-pilot.process-video'];
+    topics.forEach((topic) => {
+      this.kafka.subscribeToResponseOf(topic);
+    });
     await this.kafka.connect();
   }
 
@@ -24,7 +28,7 @@ export class VideoService implements OnModuleInit {
 
     const created = (await this.repository.create(video))!;
 
-    this.kafka.emit('process-video', {
+    this.kafka.emit('content-pilot.process-video', {
       videoId: created.id,
       videoUrl,
     });

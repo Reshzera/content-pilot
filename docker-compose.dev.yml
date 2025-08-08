@@ -1,22 +1,6 @@
 version: '3.8'
 
 services:
-  # app:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.dev
-  #   ports:
-  #     - '3000:3000'
-  #   depends_on:
-  #     - postgres
-  #     - kafka
-  #   environment:
-  #     DATABASE_URL: postgres://admin:admin@postgres:5432/content_pilot
-  #     KAFKA_BROKER: kafka:9092
-  #     JWT_SECRET_KEY: your_jwt_secret_here
-  #     JWT_EXPIRATION_TIME: 7d
-  #   restart: unless-stopped
-
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -28,29 +12,48 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - backend
+    networks: [backend]
 
   kafka:
     image: bitnami/kafka:3.7
     container_name: kafka
+    networks: [backend]
     ports:
-      - '9092:9092' # externo
+      - '9092:9092' # interno p/ containers
+      - '9094:9094' # externo (host) - use essa porta no app fora do Docker
     environment:
-      - KAFKA_KRAFT_MODE=true
-      - KAFKA_CFG_NODE_ID=1
-      - KAFKA_CFG_PROCESS_ROLES=controller,broker
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_LOG_DIRS=/bitnami/kafka/data
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
-    networks:
-      - backend
+      KAFKA_KRAFT_MODE: 'true'
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_PROCESS_ROLES: controller,broker
+
+      # 3 listeners: interno p/ brokers/containers, externo p/ host, e controller
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://:9094,CONTROLLER://:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9094
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+
+      KAFKA_CFG_LOG_DIRS: /bitnami/kafka/data
+      KAFKA_CFG_NUM_PARTITIONS: 1
+      # Em dev pode ativar auto-create se quiser:
+      # KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
     volumes:
       - kafka_data:/bitnami/kafka
+
+  kafkaui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafkaui
+    ports:
+      - '8080:8080'
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    depends_on:
+      - kafka
+    networks: [backend]
 
 networks:
   backend:

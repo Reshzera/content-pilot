@@ -4,6 +4,7 @@ import { VideoController } from './controllers/video.controller';
 import { VideoService } from './services/video.service';
 import { VideoRepository } from './repositories/video.repository';
 import { InfraModule } from '../../infra/infra.module';
+import { VideoEventsController } from './controllers/video.event.controller';
 
 @Module({
   imports: [
@@ -14,17 +15,15 @@ import { InfraModule } from '../../infra/infra.module';
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'content-pilot',
-            brokers: ['localhost:9092'],
+            clientId: process.env.KAFKA_PRODUCER_CLIENT_ID!,
+            brokers: [process.env.KAFKA_BROKER!],
           },
-          consumer: {
-            groupId: 'content-pilot-video',
-          },
+          producerOnlyMode: true,
         },
       },
     ]),
   ],
-  controllers: [VideoController],
+  controllers: [VideoController, VideoEventsController],
   providers: [VideoService, VideoRepository],
 })
 export class VideoModule {}
