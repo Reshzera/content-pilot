@@ -2,32 +2,28 @@ import { Cuts as PrismaCut } from '@prisma/client';
 
 export interface CutProps {
   id?: string;
-  url: string;
-  startTime: number;
-  endTime: number;
+  title: string;
+  bucketPath: string;
   videoId: string;
 }
 
 export interface CutToApi {
   id: string;
-  url: string;
-  startTime: number;
-  endTime: number;
+  title: string;
+  presignedUrl: string;
 }
 
 export class Cut {
   id: string;
-  url: string;
-  startTime: number;
-  endTime: number;
+  bucketPath: string;
+  title: string;
   videoId: string;
 
   constructor(props: CutProps) {
     this.id = props.id ?? '';
-    this.url = props.url;
-    this.startTime = props.startTime;
-    this.endTime = props.endTime;
+    this.bucketPath = props.bucketPath;
     this.videoId = props.videoId;
+    this.title = props.title;
   }
 
   static PrismaToEntity(prismaCut: PrismaCut | null): Cut | null {
@@ -37,10 +33,9 @@ export class Cut {
 
     return new Cut({
       id: prismaCut.id,
-      url: prismaCut.url,
-      startTime: prismaCut.startTime,
-      endTime: prismaCut.endTime,
+      bucketPath: prismaCut.bucketPath,
       videoId: prismaCut.videoId,
+      title: prismaCut.title,
     });
   }
 
@@ -51,9 +46,8 @@ export class Cut {
 
     return {
       id: cut.id,
-      url: cut.url,
-      startTime: cut.startTime,
-      endTime: cut.endTime,
+      title: cut.title,
+      presignedUrl: cut.bucketPath,
     };
   }
 }

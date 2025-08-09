@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../infra/Prisma/prisma.service';
 import { Video } from '../entities/video.entity';
 import { Cut } from '../entities/cut.entity';
+import { Channel } from '../../channel/entities/channel.entity';
 
 @Injectable()
 export class VideoRepository {
@@ -10,8 +11,7 @@ export class VideoRepository {
   async create(video: Video) {
     const created = await this.prisma.videos.create({
       data: {
-        title: video.title,
-        description: video.description,
+        status: video.status,
         url: video.url,
         channelId: video.channelId,
       },
@@ -19,12 +19,21 @@ export class VideoRepository {
     return Video.PrismaToEntity(created);
   }
 
+  async findChannelById(channelId: string) {
+    const channel = await this.prisma.channels.findUnique({
+      where: {
+        id: channelId,
+      },
+    });
+
+    return Channel.PrismaToEntity(channel);
+  }
+
   async createCut(cut: Cut) {
     const created = await this.prisma.cuts.create({
       data: {
-        url: cut.url,
-        startTime: cut.startTime,
-        endTime: cut.endTime,
+        bucketPath: cut.bucketPath,
+        title: cut.title,
         videoId: cut.videoId,
       },
     });

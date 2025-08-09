@@ -3,35 +3,31 @@ import { Cut, CutToApi } from './cut.entity';
 
 export interface VideoProps {
   id?: string;
-  title: string;
-  description?: string | null;
   url: string;
+  status: 'processing' | 'completed';
   channelId: string;
   cuts?: Cut[];
 }
 
 export interface VideoToApi {
   id: string;
-  title: string;
-  description?: string;
   url: string;
+  status: 'processing' | 'completed';
   cuts?: CutToApi[];
 }
 
 export class Video {
   id: string;
-  title: string;
-  description?: string | null;
   url: string;
   channelId: string;
+  status: 'processing' | 'completed';
   cuts: Cut[];
 
   constructor(props: VideoProps) {
     this.id = props.id ?? '';
-    this.title = props.title;
-    this.description = props.description ?? null;
     this.url = props.url;
     this.channelId = props.channelId;
+    this.status = props.status;
     this.cuts = props.cuts ?? [];
   }
 
@@ -46,9 +42,8 @@ export class Video {
 
     return new Video({
       id: prismaVideo.id,
-      title: prismaVideo.title,
-      description: prismaVideo.description,
       url: prismaVideo.url,
+      status: prismaVideo.status as any,
       channelId: prismaVideo.channelId,
       cuts,
     });
@@ -61,9 +56,8 @@ export class Video {
 
     return {
       id: video.id,
-      title: video.title,
-      description: video.description ?? undefined,
       url: video.url,
+      status: video.status,
       cuts: video.cuts.map((c) => Cut.EntityToApi(c)!),
     };
   }
