@@ -5,6 +5,7 @@ import { Cut } from '../entities/cut.entity';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateShortsCutsDto } from '../dtos/create-short-processed';
 import { ChannelNotFoundError } from '../../../errors/channel.errors';
+import { VideoNotFoundError } from '../../../errors/video.errors';
 
 @Injectable()
 export class VideoService implements OnModuleInit {
@@ -43,6 +44,13 @@ export class VideoService implements OnModuleInit {
   async addCuts(cutsEvent: CreateShortsCutsDto) {
     const videoId = cutsEvent.videoId;
     const cuts = cutsEvent.shorts;
+
+    const video = await this.repository.findVideoById(videoId);
+
+    if (!video) {
+      throw new VideoNotFoundError();
+    }
+
     for (const c of cuts) {
       const cut = new Cut({
         bucketPath: c.bucketPath,
@@ -51,5 +59,9 @@ export class VideoService implements OnModuleInit {
       });
       await this.repository.createCut(cut);
     }
+
+    video.status = 'completed';
+
+    await this.repository.updateVideo(video);
   }
 }

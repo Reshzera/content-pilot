@@ -19,6 +19,29 @@ export class VideoRepository {
     return Video.PrismaToEntity(created);
   }
 
+  async findVideoById(videoId: string) {
+    const videoFound = await this.prisma.videos.findUnique({
+      where: {
+        id: videoId,
+      },
+    });
+    return Video.PrismaToEntity(videoFound);
+  }
+
+  async updateVideo(video: Video) {
+    const created = await this.prisma.videos.update({
+      where: {
+        id: video.id,
+      },
+      data: {
+        status: video.status,
+        url: video.url,
+        channelId: video.channelId,
+      },
+    });
+    return Video.PrismaToEntity(created);
+  }
+
   async findChannelById(channelId: string) {
     const channel = await this.prisma.channels.findUnique({
       where: {
