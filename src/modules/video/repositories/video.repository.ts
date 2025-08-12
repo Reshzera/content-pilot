@@ -20,9 +20,13 @@ export class VideoRepository {
   }
 
   async findVideoById(videoId: string) {
+    console.log(videoId);
     const videoFound = await this.prisma.videos.findUnique({
       where: {
         id: videoId,
+      },
+      include: {
+        cuts: true,
       },
     });
     return Video.PrismaToEntity(videoFound);

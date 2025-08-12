@@ -10,7 +10,7 @@ export interface CutProps {
 export interface CutToApi {
   id: string;
   title: string;
-  presignedUrl: string;
+  url: string;
 }
 
 export class Cut {
@@ -47,7 +47,7 @@ export class Cut {
     return {
       id: cut.id,
       title: cut.title,
-      presignedUrl: cut.bucketPath,
+      url: cut.bucketPath,
     };
   }
 }

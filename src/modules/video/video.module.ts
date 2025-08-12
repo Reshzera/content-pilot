@@ -5,6 +5,7 @@ import { VideoService } from './services/video.service';
 import { VideoRepository } from './repositories/video.repository';
 import { InfraModule } from '../../infra/infra.module';
 import { VideoEventsController } from './controllers/video.event.controller';
+import { AwsService } from '../aws/aws.service';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { VideoEventsController } from './controllers/video.event.controller';
     ]),
   ],
   controllers: [VideoController, VideoEventsController],
-  providers: [VideoService, VideoRepository],
+  providers: [VideoService, VideoRepository, AwsService],
 })
 export class VideoModule {}

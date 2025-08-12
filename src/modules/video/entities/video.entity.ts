@@ -38,7 +38,7 @@ export class Video {
       return null;
     }
 
-    const cuts = (prismaVideo.cuts || []).map((c) => Cut.PrismaToEntity(c)!);
+    const cuts = prismaVideo.cuts?.map((c) => Cut.PrismaToEntity(c)!) || [];
 
     return new Video({
       id: prismaVideo.id,

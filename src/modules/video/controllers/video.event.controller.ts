@@ -10,6 +10,6 @@ export class VideoEventsController {
   @EventPattern('content-pilot-video-service.cuts-completed')
   async handleCutsCompleted(@Payload() data: CreateShortsCutsDto) {
     console.log('cuts event recieved', data);
-    await this.service.addCuts(data);
+    await this.service.saveCreatedCuts(data);
   }
 }

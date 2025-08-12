@@ -39,7 +39,7 @@ export class ChannelService {
 
   async findAll(ownerId: string) {
     const channels = await this.repository.findUserChannels(ownerId);
-    return channels.map((channel) => Channel.EntityToApi(channel as Channel));
+    return channels.map((channel) => Channel.EntityToApi(channel));
   }
 
   async update(ownerId: string, id: string, data: UpdateChannelDto) {
